@@ -187,6 +187,11 @@ const RAW=`01|Dive into the SPEED|A-One Vo: AXEL.K|01
 78|C & B|PSYQUI Vo: Such|06
 79|MUSIC PЯAYER|A-One Vo: Rute / あき|06
 80|Elusive Enforcer|K-forest vs. Reku Mochizuki|06
+86|Chasing Rain|DiGiTAL WiNG Vo: ふうか、空音 / RAP: ytr|01
+87|KATANA|A-One Vo: みぃ|01
+88|Through the rain|Xceon Vo: Kanae Asaba|01
+89|My initial|Xceon Vo: 小林真奈|01
+93|EXIT|Command (Eurobeat Union) Vo: Iori|01
 L01|JUNGLE FIRE feat. MOTSU|芹澤 優|08`;
 
 const SER={"01":"THE ARCADE オリジナル","02":"東方","03":"Dave Rodgers","04":"20th Anniversary","05":"VOCALOID","06":"CHUNITHM","07":"Hot-Version","08":"MF Ghost"};
@@ -199,9 +204,9 @@ function hl(el,text,terms){
     if(s0>p) el.append(text.slice(p,s0)); const m=document.createElement("mark"); m.textContent=text.slice(s0,b); el.append(m); p=b; }
   el.append(text.slice(p));
 }
-const T=RAW.split("\n").map(l=>{const [no,title,artist,j]=l.split("|");
+const T=RAW.split("\n").map(l=>{const [no,title,artist,j,file]=l.split("|");
   const label=no[0]==="L"?"LIMITED"+no.slice(1):no;
-  return {no,j,hay:nrm(no+" "+title+" "+artist+" "+SER[j]).n,no,title,artist,cv:"artwork/T_Common_CDJacket_"+j+"_Big.png",fn:label+"_"+title+".mp3"};});
+  return {no,j,hay:nrm(no+" "+title+" "+artist+" "+SER[j]).n,no,title,artist,cv:"artwork/T_Common_CDJacket_"+j+"_Big.png",fn:file||label+"_"+title+".mp3"};});
 const $=id=>document.getElementById(id), au=$("au"), list=$("list");
 const MS="mediaSession" in navigator ? navigator.mediaSession : null;
 // ロック画面・コントロールセンター・Bluetooth機器などに曲情報を渡す
