@@ -187,6 +187,19 @@ const T=RAW.split("\n").map(l=>{const [no,title,artist,j]=l.split("|");
   const label=no[0]==="L"?"LIMITED"+no.slice(1):no;
   return {no,j,hay:nrm(no+" "+title+" "+artist+" "+SER[j]).n,no,title,artist,cv:"artwork/T_Common_CDJacket_"+j+"_Big.png",fn:label+"_"+title+".ogg"};});
 const $=id=>document.getElementById(id), au=$("au"), list=$("list");
+const MS="mediaSession" in navigator ? navigator.mediaSession : null;
+// ロック画面・コントロールセンター・Bluetooth機器などに曲情報を渡す
+function setMeta(t){
+  if(!MS||!window.MediaMetadata) return;
+  MS.metadata=new MediaMetadata({title:t.title,artist:t.artist,album:"頭文字D THE ARCADE",
+    artwork:[{src:new URL(t.cv,location.href).href,sizes:"288x336",type:"image/png"}]});
+}
+if(MS){
+  const h=(a,f)=>{try{MS.setActionHandler(a,f)}catch(e){}};
+  h("play",()=>au.play()); h("pause",()=>au.pause());
+  h("previoustrack",()=>$("prev").click()); h("nexttrack",()=>step(1));
+  h("seekto",d=>{au.currentTime=d.seekTime});
+}
 let tried=0, vis=[], cur=-1, shuffle=false, repeat=false;
 
 function render(){
@@ -211,7 +224,7 @@ function icon(p){$("ic").innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<
 function srcOf(t,k){const f=[t.fn,t.fn.normalize("NFD"),t.fn.normalize("NFC")].filter((v,i,a)=>a.indexOf(v)===i);return k<f.length?"songs/"+encodeURIComponent(f[k]):null}
 function play(i){
   cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t,0); au.play().catch(()=>{});
-  $("nt").textContent=t.no+"  "+t.title; $("pcv").src=t.cv; $("pcv").hidden=false; document.title=t.title+" - 頭文字D THE ARCADE";
+  $("nt").textContent=t.no+"  "+t.title; $("pcv").src=t.cv; $("pcv").hidden=false; document.title=t.title+" - 頭文字D THE ARCADE"; setMeta(t);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("on",+r.dataset.i===i));
   const on=document.querySelector(".row.on"); if(on) on.scrollIntoView({block:"nearest"});
 }
@@ -229,7 +242,7 @@ $("theme").onclick=()=>{const d=document.documentElement,l=getComputedStyle(d).c
 Object.entries(SER).forEach(([k,v])=>{const o=document.createElement("option");o.value=k;o.textContent=v;$("ser").appendChild(o)});
 $("q").oninput=render; $("ser").onchange=render;
 $("q").onkeydown=e=>{ if(e.key==="Escape"){e.target.value="";render()} };
-au.onplay=()=>icon(true); au.onpause=()=>icon(false);
+au.onplay=()=>{icon(true);if(MS)MS.playbackState="playing"}; au.onpause=()=>{icon(false);if(MS)MS.playbackState="paused"};
 au.onended=()=>{ if(repeat){au.currentTime=0;au.play()} else step(1) };
 au.onerror=()=>{
   if(cur<0) return; const t=T[cur], n=srcOf(t,tried+1);
@@ -240,6 +253,7 @@ au.ontimeupdate=()=>{
   const p=au.duration?au.currentTime/au.duration*100:0;
   $("fill").style.width=p+"%"; $("dot").style.left=p+"%"; $("seek").setAttribute("aria-valuenow",Math.round(p));
   $("tm").textContent=fmt(au.currentTime)+" / "+fmt(au.duration);
+  if(MS&&au.duration) try{MS.setPositionState({duration:au.duration,position:au.currentTime,playbackRate:au.playbackRate})}catch(e){}
 };
 function seekTo(e){const r=$("seek").getBoundingClientRect();if(au.duration)au.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*au.duration}
 let drag=false; $("seek").onpointerdown=e=>{drag=true;e.currentTarget.setPointerCapture(e.pointerId);seekTo(e)};
