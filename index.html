@@ -13,7 +13,7 @@
 :root{--bk:#0a0a0c;--bk2:#131316;--bk3:#1c1c21;--line:#2e2e35;--wh:#f4f4f2;--mute:#9a9aa3;--red:#e60012;--yel:#ffd400;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bk);color:var(--wh);font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.55;padding-bottom:calc(72px + env(safe-area-inset-bottom,0px));
+body{background:var(--bk);color:var(--wh);font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.55;padding-bottom:calc(88px + env(safe-area-inset-bottom,0px));
  background-image:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.018) 46px 48px)}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--yel);outline-offset:2px}
@@ -50,28 +50,31 @@ ol{list-style:none;margin:0;padding:0}
 .empty{padding:32px 0;color:var(--mute)}
 .bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(10,10,12,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:0 12px calc(4px + env(safe-area-inset-bottom,0px))}
 .in2{max-width:860px;margin:0 auto;position:relative}
-.seek{position:absolute;left:0;right:0;top:-8px;height:16px;cursor:pointer;touch-action:none}
-.seek::before{content:"";position:absolute;left:0;right:0;top:7px;height:2px;background:var(--line)}
-.fill{position:absolute;left:0;top:7px;height:2px;width:0;background:var(--red)}
-.dot{display:none}
-.pl{display:flex;align-items:center;gap:10px;padding-top:6px}
-.pl .cv{width:38px;flex:none}
+.seek{position:absolute;left:-12px;right:-12px;top:-16px;height:34px;cursor:pointer;touch-action:none;-webkit-tap-highlight-color:transparent;user-select:none}
+.seek::before{content:"";position:absolute;left:12px;right:12px;top:15px;height:4px;background:var(--line)}
+.trk{position:absolute;left:12px;right:12px;top:0;bottom:0;pointer-events:none}
+.fill{position:absolute;left:0;top:15px;height:4px;width:0;background:var(--red)}
+.dot{position:absolute;top:10px;left:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--yel);transform:scale(.6);transition:transform .08s}
+.seek.drag .dot{transform:scale(1.5)}
+.seek.drag::before,.seek.drag .fill{top:14px;height:6px}
+.pl{display:flex;align-items:center;gap:12px;padding-top:10px}
+.pl .cv{width:46px;flex:none}
 .pl .cv[hidden]{display:none}
 .now{flex:1;min-width:0}
-.now b{display:block;font-size:13px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.now span{display:block;color:var(--mute);font-size:11px;margin-top:1px;font-family:Orbitron,sans-serif;font-variant-numeric:tabular-nums}
+.now b{display:block;font-size:15px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.now span{display:block;color:var(--mute);font-size:12px;margin-top:2px;font-family:Orbitron,sans-serif;font-variant-numeric:tabular-nums}
 .ctl{display:flex;align-items:center;gap:0;flex:none}
-.ctl button{background:none;border:0;width:38px;height:40px;cursor:pointer;display:grid;place-items:center;color:var(--wh)}
-.ctl button.tg{color:var(--mute);width:32px}
+.ctl button{background:none;border:0;width:46px;height:48px;cursor:pointer;display:grid;place-items:center;color:var(--wh)}
+.ctl button.tg{color:var(--mute);width:38px}
 .ctl button.tg[aria-pressed=true]{color:var(--yel)}
-.ctl button.main{width:42px;height:42px;margin:0 2px;background:var(--red);border-radius:50%}
-.ctl button.main i{font-size:16px}
-.ctl i{font-size:15px;display:inline-block}
+.ctl button.main{width:50px;height:50px;margin:0 2px;background:var(--red);border-radius:50%}
+.ctl button.main i{font-size:19px}
+.ctl i{font-size:18px;display:inline-block}
 #rep{position:relative}
-#rep::after{content:"1";position:absolute;right:5px;bottom:7px;font:900 8px Orbitron,sans-serif}
+#rep::after{content:"1";position:absolute;right:7px;bottom:9px;font:900 8px Orbitron,sans-serif}
 #msg{color:var(--yel);font-size:11px;margin:0;text-align:center}
 #msg:empty{display:none}
-@media (max-width:380px){.pl{gap:8px}.ctl button{width:34px}.ctl button.tg{width:28px}.ctl button.main{width:40px}}
+@media (max-width:380px){.pl{gap:8px}.ctl button{width:40px}.ctl button.tg{width:32px}.ctl button.main{width:46px;height:46px}}
 </style>
 </head>
 <body>
@@ -88,7 +91,7 @@ ol{list-style:none;margin:0;padding:0}
 <main><ol id="list"></ol><p class="empty" id="empty" hidden>該当する曲がありません。検索語を変えてください。</p></main>
 
 <div class="bar"><div class="in2">
-  <div class="seek" id="seek" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div>
+  <div class="seek" id="seek" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="trk"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div></div>
   <div class="pl">
     <img id="pcv" class="cv" alt="" hidden>
     <div class="now"><b id="nt">曲を選んでください</b><span id="tm">0:00 / 0:00</span></div>
@@ -255,16 +258,25 @@ au.onerror=()=>{
   if(n){ tried++; au.src=n; au.play().catch(()=>{}); return }
   $("msg").textContent="曲を読み込めません。songs フォルダに「"+t.fn+"」があるか確認してください。";
 };
+let drag=false;
+function paint(p){$("fill").style.width=p+"%";$("dot").style.left=p+"%";$("seek").setAttribute("aria-valuenow",Math.round(p))}
 au.ontimeupdate=()=>{
-  const p=au.duration?au.currentTime/au.duration*100:0;
-  $("fill").style.width=p+"%"; $("dot").style.left=p+"%"; $("seek").setAttribute("aria-valuenow",Math.round(p));
+  if(drag) return;
+  paint(au.duration?au.currentTime/au.duration*100:0);
   $("tm").textContent=fmt(au.currentTime)+" / "+fmt(au.duration);
   if(MS&&au.duration) try{MS.setPositionState({duration:au.duration,position:au.currentTime,playbackRate:au.playbackRate})}catch(e){}
 };
-function seekTo(e){const r=$("seek").getBoundingClientRect();if(au.duration)au.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*au.duration}
-let drag=false; $("seek").onpointerdown=e=>{drag=true;e.currentTarget.setPointerCapture(e.pointerId);seekTo(e)};
-$("seek").onpointermove=e=>{if(drag)seekTo(e)}; $("seek").onpointerup=()=>drag=false;
-$("seek").onkeydown=e=>{ if(e.key==="ArrowRight")au.currentTime+=5; if(e.key==="ArrowLeft")au.currentTime-=5 };
+function frac(e){const r=$("seek").querySelector(".trk").getBoundingClientRect();return Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))}
+function follow(e){ // 指の位置に即追従(表示は即時、音は離したときに反映)
+  const f=frac(e); paint(f*100); if(au.duration) $("tm").textContent=fmt(f*au.duration)+" / "+fmt(au.duration); return f;
+}
+const sk=$("seek");
+sk.onpointerdown=e=>{drag=true;sk.classList.add("drag");sk.setPointerCapture(e.pointerId);follow(e)};
+sk.onpointermove=e=>{if(drag)follow(e)};
+const end=e=>{if(!drag)return;const f=follow(e);drag=false;sk.classList.remove("drag");if(au.duration)au.currentTime=f*au.duration};
+sk.onpointerup=end;
+sk.onpointercancel=()=>{drag=false;sk.classList.remove("drag")};
+sk.onkeydown=e=>{ if(e.key==="ArrowRight")au.currentTime+=5; if(e.key==="ArrowLeft")au.currentTime-=5 };
 document.addEventListener("keydown",e=>{ if(e.key==="/"&&e.target===document.body){e.preventDefault();$("q").focus()} if(e.code==="Space"&&e.target===document.body){e.preventDefault();$("play").click()} });
 render();
 </script>
