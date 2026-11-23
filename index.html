@@ -185,9 +185,9 @@ function hl(el,text,terms){
 }
 const T=RAW.split("\n").map(l=>{const [no,title,artist,j]=l.split("|");
   const label=no[0]==="L"?"LIMITED"+no.slice(1):no;
-  return {no,j,hay:nrm(no+" "+title+" "+artist+" "+SER[j]).n,no,title,artist,cv:"artwork/T_Common_CDJacket_"+j+"_Big.png",src:"songs/"+encodeURIComponent(label+"_"+title+".ogg")};});
+  return {no,j,hay:nrm(no+" "+title+" "+artist+" "+SER[j]).n,no,title,artist,cv:"artwork/T_Common_CDJacket_"+j+"_Big.png",fn:label+"_"+title+".ogg"};});
 const $=id=>document.getElementById(id), au=$("au"), list=$("list");
-let vis=[], cur=-1, shuffle=false, repeat=false;
+let tried=0, vis=[], cur=-1, shuffle=false, repeat=false;
 
 function render(){
   const terms=nrm($("q").value.trim()).n.split(/\s+/).filter(Boolean), sr=$("ser").value;
@@ -207,8 +207,10 @@ function render(){
 }
 function fmt(s){s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
 function icon(p){$("ic").innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';$("play").setAttribute("aria-label",p?"一時停止":"再生")}
+// 濁点付き文字は保存環境により NFC / NFD どちらの名前にもなるため、両方を順に試す
+function srcOf(t,k){const f=[t.fn,t.fn.normalize("NFD"),t.fn.normalize("NFC")].filter((v,i,a)=>a.indexOf(v)===i);return k<f.length?"songs/"+encodeURIComponent(f[k]):null}
 function play(i){
-  cur=i; const t=T[i]; $("msg").textContent=""; au.src=t.src; au.play().catch(()=>{});
+  cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t,0); au.play().catch(()=>{});
   $("nt").textContent=t.no+"  "+t.title; $("pcv").src=t.cv; $("pcv").hidden=false; document.title=t.title+" - 頭文字D THE ARCADE";
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("on",+r.dataset.i===i));
   const on=document.querySelector(".row.on"); if(on) on.scrollIntoView({block:"nearest"});
@@ -229,7 +231,11 @@ $("q").oninput=render; $("ser").onchange=render;
 $("q").onkeydown=e=>{ if(e.key==="Escape"){e.target.value="";render()} };
 au.onplay=()=>icon(true); au.onpause=()=>icon(false);
 au.onended=()=>{ if(repeat){au.currentTime=0;au.play()} else step(1) };
-au.onerror=()=>{ $("msg").textContent="曲を読み込めません。index.html と同じ場所に songs フォルダがあるか確認してください。" };
+au.onerror=()=>{
+  if(cur<0) return; const t=T[cur], n=srcOf(t,tried+1);
+  if(n){ tried++; au.src=n; au.play().catch(()=>{}); return }
+  $("msg").textContent="曲を読み込めません。songs フォルダに「"+t.fn+"」があるか確認してください。";
+};
 au.ontimeupdate=()=>{
   const p=au.duration?au.currentTime/au.duration*100:0;
   $("fill").style.width=p+"%"; $("dot").style.left=p+"%"; $("seek").setAttribute("aria-valuenow",Math.round(p));
