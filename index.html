@@ -2,99 +2,106 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0c">
 <title>頭文字D THE ARCADE 楽曲プレーヤー</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Orbitron:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
-:root{
-  --asphalt:#1b1f26; --surface:#242932; --line:#3a414d; --lane:#eceff2; --mute:#98a1ae;
-  --tail:#e8372c; --sodium:#f2a93b; --lake:#86a3b8; color-scheme:dark;
-}
-@media (prefers-color-scheme: light){
-  :root:not([data-theme="dark"]){
-    --asphalt:#e9ecef; --surface:#f7f8fa; --line:#c5cbd3; --lane:#1b1f26; --mute:#5b6572;
-    --tail:#c9271d; --sodium:#a85f00; --lake:#4a6a80; color-scheme:light;
-  }
-}
-:root[data-theme="light"]{
-  --asphalt:#e9ecef; --surface:#f7f8fa; --line:#c5cbd3; --lane:#1b1f26; --mute:#5b6572;
-  --tail:#c9271d; --sodium:#a85f00; --lake:#4a6a80; color-scheme:light;
-}
+:root{--bk:#0a0a0c;--bk2:#131316;--bk3:#1c1c21;--line:#2e2e35;--wh:#f4f4f2;--mute:#9a9aa3;--red:#e60012;--yel:#ffd400;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--asphalt);color:var(--lane);font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.6;padding-bottom:128px}
-button,input{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--sodium);outline-offset:2px}
-header{max-width:860px;margin:0 auto;padding:48px 20px 20px}
-h1{font-family:"Dela Gothic One","Hiragino Sans","Yu Gothic",sans-serif;font-weight:400;font-size:clamp(34px,8vw,64px);line-height:1.1;margin:0;font-style:italic;letter-spacing:.01em}
-.lede{margin:12px 0 0;color:var(--mute);max-width:46ch}
-.road{height:6px;margin:24px 0 0;background:repeating-linear-gradient(90deg,var(--lane) 0 28px,transparent 28px 52px);opacity:.55}
-.tools{max-width:860px;margin:0 auto;padding:8px 20px 12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.tools input[type=search]{flex:1 1 220px;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
-.tools select{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:9px 10px}
-.cnt{width:100%;margin:2px 0 0;font-size:13px;color:var(--mute)}
-mark{background:var(--sodium);color:#1b1f26;border-radius:2px;padding:0 1px}
-.chip{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:9px 14px;cursor:pointer}
-.chip[aria-pressed=true]{border-color:var(--sodium);color:var(--sodium)}
+body{background:var(--bk);color:var(--wh);font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.55;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px));
+ background-image:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.018) 46px 48px)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--yel);outline-offset:2px}
+.hero{position:relative;overflow:hidden;border-bottom:3px solid var(--red);background:linear-gradient(100deg,#000 0 55%,#1a0004 100%)}
+.hero::before{content:"";position:absolute;right:-8%;top:0;bottom:0;width:46%;background:repeating-linear-gradient(115deg,var(--red) 0 14px,transparent 14px 34px,var(--yel) 34px 40px,transparent 40px 70px);opacity:.9;transform:skewX(-14deg);clip-path:polygon(0 0,100% 0,100% 100%,18% 100%)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#000 45%,rgba(0,0,0,.2) 80%,transparent)}
+.hero .in{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:max(36px,env(safe-area-inset-top,0px)) 20px 26px}
+.tag{display:inline-block;background:var(--yel);color:#000;font-family:Orbitron,sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;padding:3px 12px 3px 10px;transform:skewX(-14deg)}
+.tag span{display:inline-block;transform:skewX(14deg)}
+h1{margin:12px 0 0;font-family:"Dela Gothic One","Hiragino Sans",sans-serif;font-weight:400;font-style:italic;line-height:1;transform:skewX(-8deg);transform-origin:left bottom}
+h1 .d{display:block;font-size:clamp(40px,11vw,84px);color:var(--wh);text-shadow:3px 3px 0 var(--red)}
+h1 .d i{color:var(--red);font-style:italic;text-shadow:3px 3px 0 #fff3}
+h1 .a{display:block;font-family:Orbitron,sans-serif;font-weight:900;font-size:clamp(22px,6.4vw,46px);letter-spacing:.12em;color:var(--yel);margin-top:6px}
+.lede{margin:16px 0 0;max-width:34ch;color:#d6d6da;font-size:14px;font-weight:700}
+.lede em{font-style:normal;color:var(--yel)}
+.tools{max-width:860px;margin:0 auto;padding:18px 20px 10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools input,.tools select{background:var(--bk2);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:0;padding:10px 12px}
+.tools input{flex:1 1 220px;min-width:0}
+.tools select{flex:0 1 auto;max-width:100%}
+.cnt{width:100%;margin:2px 0 0;font-size:12px;color:var(--mute);font-family:Orbitron,"Zen Kaku Gothic New",sans-serif;letter-spacing:.04em}
+mark{background:var(--yel);color:#000;padding:0 1px}
 main{max-width:860px;margin:0 auto;padding:0 20px}
 ol{list-style:none;margin:0;padding:0}
-.row{display:grid;grid-template-columns:44px 44px 1fr;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:12px 8px 12px 0;cursor:pointer;border-left:4px solid transparent}
-.row:hover{background:var(--surface)}
-.row.on{border-left-color:var(--tail);background:var(--surface)}
-.no{font-family:"Dela Gothic One",sans-serif;font-size:20px;text-align:right;color:var(--mute);font-variant-numeric:tabular-nums}
-.row.on .no{color:var(--tail)}
-.t{display:block;font-weight:700;overflow-wrap:anywhere}
-.a{display:block;font-size:13px;color:var(--mute);overflow-wrap:anywhere}
-.cv{width:44px;aspect-ratio:288/336;object-fit:cover;border-radius:3px;background:var(--line);display:block}
-.pv{width:40px;flex:none}
+.row{position:relative;display:grid;grid-template-columns:48px 44px 1fr;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 8px 10px 0;cursor:pointer}
+.row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:transparent;transform:skewX(-14deg)}
+.row:hover{background:linear-gradient(90deg,var(--bk3),transparent)}
+.row.on{background:linear-gradient(90deg,rgba(230,0,18,.28),transparent 80%)}
+.row.on::before{background:var(--red);box-shadow:0 0 12px var(--red)}
+.no{font-family:Orbitron,sans-serif;font-weight:900;font-size:16px;text-align:right;color:var(--mute);font-style:italic}
+.row.on .no{color:var(--yel)}
+.t{display:block;font-weight:900;overflow-wrap:anywhere}
+.a{display:block;font-size:12px;color:var(--mute);overflow-wrap:anywhere}
+.cv{width:44px;aspect-ratio:288/336;object-fit:cover;background:var(--line);display:block;clip-path:polygon(0 0,100% 0,100% 82%,88% 100%,0 100%)}
 .empty{padding:32px 0;color:var(--mute)}
-.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px))}
-.in{max-width:860px;margin:0 auto}
-.now{display:flex;gap:12px;align-items:center}
-.now b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.now span{color:var(--mute);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.seek{position:relative;height:22px;margin:6px 0;cursor:pointer;touch-action:none}
-.seek::before{content:"";position:absolute;left:0;right:0;top:9px;height:4px;background:repeating-linear-gradient(90deg,var(--mute) 0 14px,transparent 14px 24px);opacity:.6}
-.fill{position:absolute;left:0;top:9px;height:4px;width:0;background:repeating-linear-gradient(90deg,var(--lane) 0 14px,transparent 14px 24px)}
-.dot{position:absolute;top:4px;left:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--tail);box-shadow:0 0 10px var(--tail)}
-.ctl{display:flex;justify-content:center;align-items:center;gap:14px}
-.ctl button{background:none;border:1px solid var(--line);border-radius:50%;width:44px;height:44px;cursor:pointer;display:grid;place-items:center}
-.ctl button.main{width:54px;height:54px;background:var(--tail);border-color:var(--tail);color:#fff}
-svg{width:20px;height:20px;fill:currentColor}
-#msg{color:var(--sodium);font-size:13px;margin:6px 0 0;min-height:1em;text-align:center}
-@media (prefers-reduced-motion:no-preference){.row{transition:background .15s}}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(10,10,12,.96);backdrop-filter:blur(8px);border-top:2px solid var(--red);padding:0 12px calc(6px + env(safe-area-inset-bottom,0px))}
+.in2{max-width:860px;margin:0 auto}
+.seek{position:relative;height:16px;cursor:pointer;touch-action:none}
+.seek::before{content:"";position:absolute;left:0;right:0;top:6px;height:3px;background:var(--line)}
+.fill{position:absolute;left:0;top:6px;height:3px;width:0;background:linear-gradient(90deg,var(--red),var(--yel))}
+.dot{position:absolute;top:2px;left:0;width:10px;height:11px;margin-left:-5px;background:var(--yel);transform:skewX(-14deg);box-shadow:0 0 8px var(--yel)}
+.pl{display:flex;align-items:center;gap:8px}
+.pl .cv{width:34px;flex:none}
+.pl .cv[hidden]{display:none}
+.now{flex:1;min-width:0}
+.now b{display:block;font-size:13px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.now span{display:block;color:var(--mute);font-size:11px;font-family:Orbitron,sans-serif;font-variant-numeric:tabular-nums}
+.ctl{display:flex;align-items:center;gap:2px;flex:none}
+.ctl button{background:none;border:0;width:34px;height:34px;cursor:pointer;display:grid;place-items:center;color:var(--wh)}
+.ctl button.tg{color:var(--mute)}
+.ctl button.tg[aria-pressed=true]{color:var(--yel);filter:drop-shadow(0 0 5px var(--yel))}
+.ctl button.main{width:42px;height:38px;margin:0 3px;background:var(--red);transform:skewX(-14deg);box-shadow:0 0 12px rgba(230,0,18,.6)}
+.ctl button.main i{transform:skewX(14deg)}
+.ctl i{font-size:16px;display:inline-block}
+#rep{position:relative}
+#rep::after{content:"1";position:absolute;right:5px;bottom:4px;font:900 8px Orbitron,sans-serif}
+#msg{color:var(--yel);font-size:11px;margin:0;min-height:0;text-align:center}
+#msg:empty{display:none}
+@media (max-width:380px){.pl .cv{display:none}.ctl button{width:30px}}
 </style>
 </head>
 <body>
-<header>
-  <h1>頭文字D<br>THE ARCADE</h1>
-  <p class="lede">ゲーム内BGMをWikiの番号順に並べたプレーヤーです。曲名を押すと再生し、終わると次の曲へ進みます。</p>
-  <div class="road" aria-hidden="true"></div>
-</header>
+<header class="hero"><div class="in">
+  <div class="tag"><span>EUROBEAT NON-STOP</span></div>
+  <h1><span class="d">頭文字<i>D</i></span><span class="a">THE ARCADE</span></h1>
+  <p class="lede">深夜の峠を駆け抜ける<em>ユーロビート</em>を、ここで全開に。曲を選べばそのままノンストップ。</p>
+</div></header>
 <div class="tools">
   <input id="q" type="search" placeholder="曲名・アーティスト・番号（スペースで複数指定）" aria-label="曲を検索">
   <select id="ser" aria-label="シリーズで絞り込む"><option value="">すべてのシリーズ</option></select>
-  <button class="chip" id="shuf" aria-pressed="false">シャッフル</button>
-  <button class="chip" id="rep" aria-pressed="false">1曲リピート</button>
-  <button class="chip" id="theme">明暗切替</button>
   <p class="cnt" id="cnt" role="status"></p>
 </div>
 <main><ol id="list"></ol><p class="empty" id="empty" hidden>該当する曲がありません。検索語を変えてください。</p></main>
 
-<div class="bar">
-  <div class="in">
-    <div class="now"><img id="pcv" class="cv pv" alt="" hidden><b id="nt">曲を選んでください</b><span id="tm">0:00 / 0:00</span></div>
-    <div class="seek" id="seek" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div>
+<div class="bar"><div class="in2">
+  <div class="seek" id="seek" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div>
+  <div class="pl">
+    <img id="pcv" class="cv" alt="" hidden>
+    <div class="now"><b id="nt">曲を選んでください</b><span id="tm">0:00 / 0:00</span></div>
     <div class="ctl">
-      <button id="prev" aria-label="前の曲"><svg viewBox="0 0 24 24"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
-      <button id="play" class="main" aria-label="再生"><svg viewBox="0 0 24 24" id="ic"><path d="M7 4v16l13-8z"/></svg></button>
-      <button id="next" aria-label="次の曲"><svg viewBox="0 0 24 24"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+      <button id="shuf" class="tg" aria-pressed="false" aria-label="シャッフル" title="シャッフル"><i class="fa-solid fa-shuffle" aria-hidden="true"></i></button>
+      <button id="prev" aria-label="前の曲"><i class="fa-solid fa-backward-step" aria-hidden="true"></i></button>
+      <button id="play" class="main" aria-label="再生"><i class="fa-solid fa-play" id="ic" aria-hidden="true"></i></button>
+      <button id="next" aria-label="次の曲"><i class="fa-solid fa-forward-step" aria-hidden="true"></i></button>
+      <button id="rep" class="tg" aria-pressed="false" aria-label="1曲リピート" title="1曲リピート"><i class="fa-solid fa-repeat" aria-hidden="true"></i></button>
     </div>
-    <p id="msg" role="status"></p>
   </div>
-</div>
+  <p id="msg" role="status"></p>
+</div></div>
 <audio id="au" preload="metadata"></audio>
 
 <script>
@@ -219,11 +226,11 @@ function render(){
   $("empty").hidden=vis.length>0;
 }
 function fmt(s){s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
-function icon(p){$("ic").innerHTML=p?'<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>':'<path d="M7 4v16l13-8z"/>';$("play").setAttribute("aria-label",p?"一時停止":"再生")}
+function icon(p){$("ic").className=p?"fa-solid fa-pause":"fa-solid fa-play";$("play").setAttribute("aria-label",p?"一時停止":"再生")}
 // 濁点付き文字は保存環境により NFC / NFD どちらの名前にもなるため、両方を順に試す
 function srcOf(t,k){const f=[t.fn,t.fn.normalize("NFD"),t.fn.normalize("NFC")].filter((v,i,a)=>a.indexOf(v)===i);return k<f.length?"songs/"+encodeURIComponent(f[k]):null}
 function play(i){
-  cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t,0); au.play().catch(()=>{});
+  cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t,0); upd(); au.play().catch(()=>{});
   $("nt").textContent=t.no+"  "+t.title; $("pcv").src=t.cv; $("pcv").hidden=false; document.title=t.title+" - 頭文字D THE ARCADE"; setMeta(t);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("on",+r.dataset.i===i));
   const on=document.querySelector(".row.on"); if(on) on.scrollIntoView({block:"nearest"});
@@ -238,7 +245,6 @@ $("next").onclick=()=>step(1);
 $("prev").onclick=()=>{ if(au.currentTime>3) au.currentTime=0; else step(-1) };
 $("shuf").onclick=e=>{shuffle=!shuffle;e.currentTarget.setAttribute("aria-pressed",shuffle)};
 $("rep").onclick=e=>{repeat=!repeat;e.currentTarget.setAttribute("aria-pressed",repeat)};
-$("theme").onclick=()=>{const d=document.documentElement,l=getComputedStyle(d).colorScheme==="light";d.dataset.theme=l?"dark":"light"};
 Object.entries(SER).forEach(([k,v])=>{const o=document.createElement("option");o.value=k;o.textContent=v;$("ser").appendChild(o)});
 $("q").oninput=render; $("ser").onchange=render;
 $("q").onkeydown=e=>{ if(e.key==="Escape"){e.target.value="";render()} };
@@ -249,16 +255,18 @@ au.onerror=()=>{
   if(n){ tried++; au.src=n; au.play().catch(()=>{}); return }
   $("msg").textContent="曲を読み込めません。songs フォルダに「"+t.fn+"」があるか確認してください。";
 };
-au.ontimeupdate=()=>{
-  const p=au.duration?au.currentTime/au.duration*100:0;
+function fin(d){return Number.isFinite(d)&&d>0}
+function upd(){
+  const d=au.duration, ok=fin(d), c=Math.min(au.currentTime||0, ok?d:Infinity), p=ok?c/d*100:0;
   $("fill").style.width=p+"%"; $("dot").style.left=p+"%"; $("seek").setAttribute("aria-valuenow",Math.round(p));
-  $("tm").textContent=fmt(au.currentTime)+" / "+fmt(au.duration);
-  if(MS&&au.duration) try{MS.setPositionState({duration:au.duration,position:au.currentTime,playbackRate:au.playbackRate})}catch(e){}
-};
-function seekTo(e){const r=$("seek").getBoundingClientRect();if(au.duration)au.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*au.duration}
+  $("tm").textContent=fmt(c)+" / "+(ok?fmt(d):"--:--");
+  if(MS&&ok) try{MS.setPositionState({duration:d,position:c,playbackRate:au.playbackRate||1})}catch(e){}
+}
+["timeupdate","durationchange","loadedmetadata","seeking","seeked","emptied"].forEach(ev=>au.addEventListener(ev,upd));
+function seekTo(e){const r=$("seek").getBoundingClientRect();if(fin(au.duration)){au.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*au.duration;upd()}}
 let drag=false; $("seek").onpointerdown=e=>{drag=true;e.currentTarget.setPointerCapture(e.pointerId);seekTo(e)};
 $("seek").onpointermove=e=>{if(drag)seekTo(e)}; $("seek").onpointerup=()=>drag=false;
-$("seek").onkeydown=e=>{ if(e.key==="ArrowRight")au.currentTime+=5; if(e.key==="ArrowLeft")au.currentTime-=5 };
+$("seek").onkeydown=e=>{ if(e.key==="ArrowRight")au.currentTime=Math.min(au.currentTime+5,fin(au.duration)?au.duration:au.currentTime+5); if(e.key==="ArrowLeft")au.currentTime=Math.max(0,au.currentTime-5) };
 document.addEventListener("keydown",e=>{ if(e.key==="/"&&e.target===document.body){e.preventDefault();$("q").focus()} if(e.code==="Space"&&e.target===document.body){e.preventDefault();$("play").click()} });
 render();
 </script>
