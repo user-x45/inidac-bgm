@@ -3,58 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0a0a0c">
+<meta name="theme-color" content="#d70015" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#8a0010" media="(prefers-color-scheme: dark)">
 <title>頭文字D THE ARCADE 楽曲プレーヤー</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Orbitron:wght@700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
 <style>
-:root{--bk:#0a0a0c;--bk2:#131316;--bk3:#1c1c21;--line:#2e2e35;--wh:#f4f4f2;--mute:#9a9aa3;--red:#e60012;--yel:#ffd400;color-scheme:dark}
+:root{--bg:#fff;--bg2:#f5f5f7;--line:#e3e3e8;--fg:#1d1d1f;--mute:#6e6e73;--ac:#d70015;--hl:#fff1a8;color-scheme:light dark;--sel:#fdecee;--barbg:rgba(255,255,255,.96);--err:#c0392b}
+@media (prefers-color-scheme:dark){:root{--bg:#121214;--bg2:#1e1e22;--line:#2f2f35;--fg:#f2f2f4;--mute:#a0a0a8;--ac:#ff5a67;--hl:#6b5b00;--sel:#3a1519;--barbg:rgba(18,18,20,.96);--err:#ff7b6b}}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bk);color:var(--wh);font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.55;padding-bottom:calc(132px + env(safe-area-inset-bottom,0px));
- background-image:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.018) 46px 48px)}
+body{background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.5;padding-bottom:calc(132px + env(safe-area-inset-bottom,0px))}
 button,input,select{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--yel);outline-offset:2px}
-.hero{position:relative;overflow:hidden;border-bottom:3px solid var(--red);background:linear-gradient(100deg,#000 0 55%,#1a0004 100%)}
-.hero::before{content:"";position:absolute;right:-8%;top:0;bottom:0;width:46%;background:repeating-linear-gradient(115deg,var(--red) 0 14px,transparent 14px 34px,var(--yel) 34px 40px,transparent 40px 70px);opacity:.9;transform:skewX(-14deg);clip-path:polygon(0 0,100% 0,100% 100%,18% 100%)}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#000 45%,rgba(0,0,0,.2) 80%,transparent)}
-.hero .in{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:max(36px,env(safe-area-inset-top,0px)) 20px 26px}
-.tag{display:inline-block;background:var(--yel);color:#000;font-family:Orbitron,sans-serif;font-weight:900;font-size:11px;letter-spacing:.2em;padding:3px 12px 3px 10px;transform:skewX(-14deg)}
-.tag span{display:inline-block;transform:skewX(14deg)}
-h1{margin:12px 0 0;font-family:"Dela Gothic One","Hiragino Sans",sans-serif;font-weight:400;font-style:italic;line-height:1;transform:skewX(-8deg);transform-origin:left bottom}
-h1 .d{display:block;font-size:clamp(40px,11vw,84px);color:var(--wh);text-shadow:3px 3px 0 var(--red)}
-h1 .d i{color:var(--red);font-style:italic;text-shadow:3px 3px 0 #fff3}
-h1 .a{display:block;font-family:Orbitron,sans-serif;font-weight:900;font-size:clamp(22px,6.4vw,46px);letter-spacing:.12em;color:var(--yel);margin-top:6px}
-.lede{margin:16px 0 0;max-width:34ch;color:#d6d6da;font-size:14px;font-weight:700}
-.lede em{font-style:normal;color:var(--yel)}
-.tools{max-width:860px;margin:0 auto;padding:18px 20px 10px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.tools input,.tools select{background:var(--bk2);border:1px solid var(--line);border-left:3px solid var(--red);border-radius:0;padding:10px 12px}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.hero .in{max-width:860px;margin:0 auto;padding:max(28px,env(safe-area-inset-top,0px)) 20px 8px}
+h1{margin:0;font-size:24px;font-weight:700}
+.lede{margin:4px 0 0;color:var(--mute);font-size:14px}
+.tools{max-width:860px;margin:0 auto;padding:12px 20px 8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools input,.tools select{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
 .tools input{flex:1 1 220px;min-width:0}
 .tools select{flex:0 1 auto;max-width:100%}
-.cnt{width:100%;margin:2px 0 0;font-size:12px;color:var(--mute);font-family:Orbitron,"Zen Kaku Gothic New",sans-serif;letter-spacing:.04em}
-mark{background:var(--yel);color:#000;padding:0 1px}
+.cnt{width:100%;margin:2px 0 0;font-size:12px;color:var(--mute)}
+mark{background:var(--hl);color:inherit;padding:0 1px;border-radius:2px}
 main{max-width:860px;margin:0 auto;padding:0 20px}
 ol{list-style:none;margin:0;padding:0}
-.row{position:relative;display:grid;grid-template-columns:48px 44px 1fr;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 8px 10px 0;cursor:pointer}
-.row::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:transparent;transform:skewX(-14deg)}
-.row:hover{background:linear-gradient(90deg,var(--bk3),transparent)}
-.row.on{background:linear-gradient(90deg,rgba(230,0,18,.28),transparent 80%)}
-.row.on::before{background:var(--red);box-shadow:0 0 12px var(--red)}
-.no{font-family:Orbitron,sans-serif;font-weight:900;font-size:16px;text-align:right;color:var(--mute);font-style:italic}
-.row.on .no{color:var(--yel)}
-.t{display:block;font-weight:900;overflow-wrap:anywhere}
+.row{display:grid;grid-template-columns:36px 44px 1fr;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 8px;cursor:pointer}
+.row:hover{background:var(--bg2)}
+.row.on{background:var(--sel)}
+.no{font-size:13px;text-align:right;color:var(--mute);font-variant-numeric:tabular-nums}
+.row.on .no{color:var(--ac)}
+.t{display:block;font-weight:600;overflow-wrap:anywhere}
+.row.on .t{color:var(--ac)}
 .a{display:block;font-size:12px;color:var(--mute);overflow-wrap:anywhere}
-.cv{width:44px;aspect-ratio:288/336;object-fit:cover;background:var(--line);display:block;clip-path:polygon(0 0,100% 0,100% 82%,88% 100%,0 100%)}
+.cv{width:44px;aspect-ratio:288/336;object-fit:cover;background:var(--line);display:block;border-radius:4px}
 .empty{padding:32px 0;color:var(--mute)}
-.bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:rgba(10,10,12,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:0 12px calc(4px + env(safe-area-inset-bottom,0px))}
+.bar{position:fixed;left:0;right:0;bottom:0;z-index:5;background:var(--barbg);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:0 12px calc(4px + env(safe-area-inset-bottom,0px))}
 .in2{max-width:860px;margin:0 auto;position:relative}
 .seek{position:absolute;left:-12px;right:-12px;top:-16px;height:34px;cursor:pointer;touch-action:none;-webkit-tap-highlight-color:transparent;user-select:none}
-.seek::before{content:"";position:absolute;left:12px;right:12px;top:15px;height:4px;background:var(--line)}
+.seek::before{content:"";position:absolute;left:12px;right:12px;top:15px;height:4px;border-radius:2px;background:var(--line)}
 .trk{position:absolute;left:12px;right:12px;top:0;bottom:0;pointer-events:none}
-.fill{position:absolute;left:0;top:15px;height:4px;width:0;background:var(--red)}
-.dot{position:absolute;top:10px;left:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--yel);transform:scale(.6);transition:transform .08s}
+.fill{position:absolute;left:0;top:15px;height:4px;width:0;border-radius:2px;background:var(--ac)}
+.dot{position:absolute;top:10px;left:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ac);transform:scale(.6);transition:transform .08s}
 .seek.drag .dot{transform:scale(1.5)}
 .seek.drag::before,.seek.drag .fill{top:14px;height:6px}
 .pl{display:flex;flex-direction:column;gap:2px;padding-top:12px}
@@ -66,26 +54,25 @@ ol{list-style:none;margin:0;padding:0}
 .now b{display:block;font-size:15px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .now small{display:block;color:var(--mute);font-size:12px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .now small:empty{display:none}
-.now span{flex:none;white-space:nowrap;color:var(--mute);font-size:11px;font-family:Orbitron,sans-serif;font-variant-numeric:tabular-nums}
+.now span{flex:none;white-space:nowrap;color:var(--mute);font-size:12px;font-variant-numeric:tabular-nums}
 .ctl{display:flex;align-items:center;justify-content:center;gap:6px;flex:none}
-.ctl button{background:none;border:0;width:46px;height:48px;cursor:pointer;display:grid;place-items:center;color:var(--wh)}
+.ctl button{background:none;border:0;width:46px;height:48px;cursor:pointer;display:grid;place-items:center;color:var(--fg)}
 .ctl button.tg{color:var(--mute);width:38px}
-.ctl button.tg[aria-pressed=true]{color:var(--yel)}
-.ctl button.main{width:50px;height:50px;margin:0 2px;background:var(--red);border-radius:50%}
+.ctl button.tg[aria-pressed=true]{color:var(--ac)}
+.ctl button.main{width:50px;height:50px;margin:0 2px;background:#d70015;color:#fff;border-radius:50%}
 .ctl button.main i{font-size:19px}
 .ctl i{font-size:18px;display:inline-block}
 #rep{position:relative}
-#rep::after{content:"1";position:absolute;right:7px;bottom:9px;font:900 8px Orbitron,sans-serif}
-#msg{color:var(--yel);font-size:11px;margin:0;text-align:center}
+#rep::after{content:"1";position:absolute;right:7px;bottom:9px;font:700 8px system-ui,sans-serif}
+#msg{color:var(--err);font-size:12px;margin:0;text-align:center}
 #msg:empty{display:none}
 @media (max-width:380px){.ctl{gap:2px}}
 </style>
 </head>
 <body>
 <header class="hero"><div class="in">
-  <div class="tag"><span>EUROBEAT NON-STOP</span></div>
-  <h1><span class="d">頭文字<i>D</i></span><span class="a">THE ARCADE</span></h1>
-  <p class="lede">深夜の峠を駆け抜ける<em>ユーロビート</em>を、ここで全開に。曲を選べばそのままノンストップ。</p>
+  <h1>頭文字D THE ARCADE 楽曲プレーヤー</h1>
+  <p class="lede">曲を選ぶと再生が始まり、終わると次の曲へ進みます。</p>
 </div></header>
 <div class="tools">
   <input id="q" type="search" placeholder="曲名・アーティスト・番号（スペースで複数指定）" aria-label="曲を検索">
@@ -245,7 +232,7 @@ function icon(p){$("ic").className=p?"fa-solid fa-pause":"fa-solid fa-play";$("p
 function srcOf(t,k){const f=[t.fn,t.fn.normalize("NFD"),t.fn.normalize("NFC")].filter((v,i,a)=>a.indexOf(v)===i);return k<f.length?"songs/"+encodeURIComponent(f[k]):null}
 function play(i){
   cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t,0); au.play().catch(()=>{});
-  $("nt").textContent=t.no+"  "+t.title; $("na").textContent=t.artist; $("pcv").src=t.cv; $("pcv").hidden=false; document.title=t.title+" - 頭文字D THE ARCADE"; setMeta(t);
+  $("nt").textContent=t.no+"  "+t.title; $("na").textContent=t.artist; $("pcv").src=t.cv; $("pcv").hidden=false; setMeta(t);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("on",+r.dataset.i===i));
   const on=document.querySelector(".row.on"); if(on) on.scrollIntoView({block:"nearest"});
 }
