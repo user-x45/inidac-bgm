@@ -201,7 +201,7 @@ function hl(el,text,terms){
 }
 const T=RAW.split("\n").map(l=>{const [no,title,artist,j]=l.split("|");
   const label=no[0]==="L"?"LIMITED"+no.slice(1):no;
-  return {no,j,hay:nrm(no+" "+title+" "+artist+" "+SER[j]).n,no,title,artist,cv:"artwork/T_Common_CDJacket_"+j+"_Big.png",fn:label+"_"+title+".ogg"};});
+  return {no,j,hay:nrm(no+" "+title+" "+artist+" "+SER[j]).n,no,title,artist,cv:"artwork/T_Common_CDJacket_"+j+"_Big.png",fn:label+"_"+title+".mp3"};});
 const $=id=>document.getElementById(id), au=$("au"), list=$("list");
 const MS="mediaSession" in navigator ? navigator.mediaSession : null;
 // ロック画面・コントロールセンター・Bluetooth機器などに曲情報を渡す
