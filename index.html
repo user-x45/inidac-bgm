@@ -182,9 +182,10 @@ const RAW=`01|Dive into the SPEED|A-One Vo: AXEL.K|01
 88|Through the rain|Xceon Vo: Kanae Asaba|01
 89|My initial|Xceon Vo: 小林真奈|01
 93|EXIT|Command (Eurobeat Union) Vo: Iori|01
-L01|JUNGLE FIRE feat. MOTSU|芹澤 優|08`;
+L01|JUNGLE FIRE feat. MOTSU|芹澤 優|08
+L02|うまぴょい伝説|本田晃弘(Cygames) Vo: スペシャルウィーク、サイレンススズカ、トウカイテイオー|09`;
 
-const SER={"01":"THE ARCADE オリジナル","02":"東方","03":"Dave Rodgers","04":"20th Anniversary","05":"VOCALOID","06":"CHUNITHM","07":"Hot-Version","08":"MF Ghost"};
+const SER={"01":"THE ARCADE オリジナル","02":"東方","03":"Dave Rodgers","04":"20th Anniversary","05":"VOCALOID","06":"CHUNITHM","07":"Hot-Version","08":"MF Ghost","09":"ウマ娘"};
 function nrm(s){let n="",map=[];for(let i=0;i<s.length;i++){const c=s[i].normalize("NFKC").toLowerCase().replace(/[ァ-ヶ]/g,x=>String.fromCharCode(x.charCodeAt(0)-96));for(const ch of c){n+=ch;map.push(i)}}return {n,map}}
 function hl(el,text,terms){
   const {n,map}=nrm(text),r=[];
