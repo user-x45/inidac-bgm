@@ -13,7 +13,7 @@
 :root{--bk:#0a0a0c;--bk2:#131316;--bk3:#1c1c21;--line:#2e2e35;--wh:#f4f4f2;--mute:#9a9aa3;--red:#e60012;--yel:#ffd400;color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bk);color:var(--wh);font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.55;padding-bottom:calc(88px + env(safe-area-inset-bottom,0px));
+body{background:var(--bk);color:var(--wh);font-family:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP","Yu Gothic",sans-serif;line-height:1.55;padding-bottom:calc(132px + env(safe-area-inset-bottom,0px));
  background-image:repeating-linear-gradient(115deg,transparent 0 46px,rgba(255,255,255,.018) 46px 48px)}
 button,input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--yel);outline-offset:2px}
@@ -57,13 +57,17 @@ ol{list-style:none;margin:0;padding:0}
 .dot{position:absolute;top:10px;left:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--yel);transform:scale(.6);transition:transform .08s}
 .seek.drag .dot{transform:scale(1.5)}
 .seek.drag::before,.seek.drag .fill{top:14px;height:6px}
-.pl{display:flex;align-items:center;gap:12px;padding-top:10px}
+.pl{display:flex;flex-direction:column;gap:2px;padding-top:12px}
+.top{display:flex;align-items:center;gap:12px;min-width:0}
 .pl .cv{width:46px;flex:none}
 .pl .cv[hidden]{display:none}
-.now{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px}
-.now b{display:block;flex:1 1 auto;min-width:0;font-size:15px;line-height:1.25;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.now{flex:1;min-width:0;display:flex;align-items:center;gap:8px}
+.tt{flex:1;min-width:0}
+.now b{display:block;font-size:15px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.now small{display:block;color:var(--mute);font-size:12px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.now small:empty{display:none}
 .now span{flex:none;white-space:nowrap;color:var(--mute);font-size:11px;font-family:Orbitron,sans-serif;font-variant-numeric:tabular-nums}
-.ctl{display:flex;align-items:center;gap:0;flex:none}
+.ctl{display:flex;align-items:center;justify-content:center;gap:6px;flex:none}
 .ctl button{background:none;border:0;width:46px;height:48px;cursor:pointer;display:grid;place-items:center;color:var(--wh)}
 .ctl button.tg{color:var(--mute);width:38px}
 .ctl button.tg[aria-pressed=true]{color:var(--yel)}
@@ -74,7 +78,7 @@ ol{list-style:none;margin:0;padding:0}
 #rep::after{content:"1";position:absolute;right:7px;bottom:9px;font:900 8px Orbitron,sans-serif}
 #msg{color:var(--yel);font-size:11px;margin:0;text-align:center}
 #msg:empty{display:none}
-@media (max-width:380px){.pl{gap:8px}.ctl button{width:40px}.ctl button.tg{width:32px}.ctl button.main{width:46px;height:46px}}
+@media (max-width:380px){.ctl{gap:2px}}
 </style>
 </head>
 <body>
@@ -93,8 +97,10 @@ ol{list-style:none;margin:0;padding:0}
 <div class="bar"><div class="in2">
   <div class="seek" id="seek" role="slider" aria-label="再生位置" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0"><div class="trk"><div class="fill" id="fill"></div><div class="dot" id="dot"></div></div></div>
   <div class="pl">
-    <img id="pcv" class="cv" alt="" hidden>
-    <div class="now"><b id="nt">曲を選んでください</b><span id="tm">0:00 / 0:00</span></div>
+    <div class="top">
+      <img id="pcv" class="cv" alt="" hidden>
+      <div class="now"><div class="tt"><b id="nt">曲を選んでください</b><small id="na"></small></div><span id="tm">0:00 / 0:00</span></div>
+    </div>
     <div class="ctl">
       <button id="shuf" class="tg" aria-pressed="false" aria-label="シャッフル" title="シャッフル"><i class="fa-solid fa-shuffle" aria-hidden="true"></i></button>
       <button id="prev" aria-label="前の曲"><i class="fa-solid fa-backward-step" aria-hidden="true"></i></button>
@@ -234,7 +240,7 @@ function icon(p){$("ic").className=p?"fa-solid fa-pause":"fa-solid fa-play";$("p
 function srcOf(t,k){const f=[t.fn,t.fn.normalize("NFD"),t.fn.normalize("NFC")].filter((v,i,a)=>a.indexOf(v)===i);return k<f.length?"songs/"+encodeURIComponent(f[k]):null}
 function play(i){
   cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t,0); au.play().catch(()=>{});
-  $("nt").textContent=t.no+"  "+t.title; $("pcv").src=t.cv; $("pcv").hidden=false; document.title=t.title+" - 頭文字D THE ARCADE"; setMeta(t);
+  $("nt").textContent=t.no+"  "+t.title; $("na").textContent=t.artist; $("pcv").src=t.cv; $("pcv").hidden=false; document.title=t.title+" - 頭文字D THE ARCADE"; setMeta(t);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("on",+r.dataset.i===i));
   const on=document.querySelector(".row.on"); if(on) on.scrollIntoView({block:"nearest"});
 }
