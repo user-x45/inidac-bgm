@@ -253,8 +253,30 @@ $("rep").onclick=e=>{repeat=!repeat;e.currentTarget.setAttribute("aria-pressed",
 Object.entries(SER).forEach(([k,v])=>{const o=document.createElement("option");o.value=k;o.textContent=v;$("ser").appendChild(o)});
 $("q").oninput=render; $("ser").onchange=render;
 $("q").onkeydown=e=>{ if(e.key==="Escape"){e.target.value="";render()} };
-au.onplay=()=>{icon(true);if(MS)MS.playbackState="playing"}; au.onpause=()=>{icon(false);if(MS)MS.playbackState="paused"};
-au.onended=()=>{ if(repeat){au.currentTime=0;au.play()} else step(1) };
+// 全曲に自動フェードアウト: GainNode のランプを音声クロック上で予約するため、バックグラウンドでも動く
+const FADE=5; let ctx=null, gain=null;
+function setupGain(){
+  try{
+    if(!ctx){
+      const AC=window.AudioContext||window.webkitAudioContext; ctx=new AC();
+      gain=ctx.createGain(); ctx.createMediaElementSource(au).connect(gain); gain.connect(ctx.destination);
+    }
+    if(ctx.state==="suspended") ctx.resume();
+  }catch(e){ gain=null }
+}
+function schedFade(){
+  if(!gain) return;
+  const g=gain.gain, t=ctx.currentTime, d=au.duration, r=(d-au.currentTime)/(au.playbackRate||1);
+  g.cancelScheduledValues(t);
+  if(au.paused||!isFinite(d)||d<=0){ g.setValueAtTime(1,t); return }
+  if(r>=FADE){ g.setValueAtTime(1,t); g.setValueAtTime(1,t+r-FADE); g.linearRampToValueAtTime(0,t+r) }
+  else if(r>0){ g.setValueAtTime(Math.max(0,r/FADE),t); g.linearRampToValueAtTime(0,t+r) }
+}
+function resetGain(){ if(gain){ gain.gain.cancelScheduledValues(ctx.currentTime); gain.gain.setValueAtTime(1,ctx.currentTime) } }
+au.onplay=()=>{icon(true);setupGain();schedFade();if(MS)MS.playbackState="playing"}; au.onpause=()=>{icon(false);resetGain();if(MS)MS.playbackState="paused"};
+au.onseeked=schedFade; au.ondurationchange=schedFade; au.onratechange=schedFade;
+au.onloadstart=resetGain;
+au.onended=()=>{ resetGain(); if(repeat){au.currentTime=0;au.play()} else step(1) };
 au.onerror=()=>{
   if(cur<0) return; const t=T[cur], n=srcOf(t,tried+1);
   if(n){ tried++; au.src=n; au.play().catch(()=>{}); return }
