@@ -234,8 +234,8 @@ function render(){
 function setTm(t){$("tm").innerHTML=t.replace(/\d/g,c=>'<i class="d">'+c+'</i>')}
 function fmt(s){s=Math.floor(s||0);return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
 function icon(p){$("ic").className=p?"fa-solid fa-pause":"fa-solid fa-play";$("play").setAttribute("aria-label",p?"一時停止":"再生")}
-// ファイル名は NFC(濁点が1文字にまとまった形)に統一。songs フォルダ側も同じ形にしておくこと
-function srcOf(t){return "songs/"+encodeURIComponent(t.fn.normalize("NFC"))}
+// 実際の音源ファイルは NFD(濁点が別文字になった形)なので、最初から NFD で読み込む
+function srcOf(t){return "songs/"+encodeURIComponent(t.fn.normalize("NFD"))}
 function play(i){
   cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t); au.play().catch(()=>{});
   $("nt").textContent=t.no+"  "+t.title; $("na").textContent=t.artist; $("pcv").src=t.cv; $("pcv").hidden=false; setMeta(t);
@@ -259,7 +259,7 @@ au.onplay=()=>{icon(true);if(MS)MS.playbackState="playing"}; au.onpause=()=>{ico
 au.onended=()=>{ if(repeat){au.currentTime=0;au.play()} else step(1) };
 au.onerror=()=>{
   if(cur<0) return; const t=T[cur];
-  $("msg").textContent="曲を読み込めません。songs フォルダに「"+t.fn.normalize("NFC")+"」があるか確認してください。";
+  $("msg").textContent="曲を読み込めません。songs フォルダに「"+t.fn.normalize("NFD")+"」があるか確認してください。";
 };
 let drag=false;
 function paint(p){$("fill").style.width=p+"%";$("dot").style.left=p+"%";$("seek").setAttribute("aria-valuenow",Math.round(p))}
