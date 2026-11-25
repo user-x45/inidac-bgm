@@ -211,8 +211,20 @@ if(MS){
   const h=(a,f)=>{try{MS.setActionHandler(a,f)}catch(e){}};
   h("play",()=>au.play()); h("pause",()=>au.pause());
   h("previoustrack",()=>$("prev").click()); h("nexttrack",()=>step(1));
-  h("seekto",d=>{au.currentTime=d.seekTime});
+  h("seekto",d=>{if(isFinite(au.duration)){au.currentTime=Math.min(d.seekTime,au.duration);syncPos()}});
+  h("seekbackward",d=>{au.currentTime=Math.max(0,au.currentTime-(d.seekOffset||10));syncPos()});
+  h("seekforward",d=>{au.currentTime=Math.min(au.duration||0,au.currentTime+(d.seekOffset||10));syncPos()});
 }
+// ロック画面のシークバー用に再生位置をOSへ伝える(曲の長さが確定している時だけ)
+function syncPos(){
+  if(!MS||!MS.setPositionState) return;
+  try{
+    const d=au.duration;
+    if(!isFinite(d)||d<=0){MS.setPositionState();return}
+    MS.setPositionState({duration:d,position:Math.min(Math.max(au.currentTime,0),d),playbackRate:au.playbackRate||1});
+  }catch(e){}
+}
+["loadedmetadata","durationchange","seeked","playing","pause","ratechange"].forEach(ev=>au.addEventListener(ev,syncPos));
 let tried=0, vis=[], cur=-1, shuffle=false, repeat=false;
 
 function render(){
@@ -238,6 +250,7 @@ function icon(p){$("ic").className=p?"fa-solid fa-pause":"fa-solid fa-play";$("p
 function srcOf(t,k){const f=[t.fn,t.fn.normalize("NFD"),t.fn.normalize("NFC")].filter((v,i,a)=>a.indexOf(v)===i);return k<f.length?"songs/"+encodeURIComponent(f[k]):null}
 function play(i){
   cur=i; tried=0; const t=T[i]; $("msg").textContent=""; au.src=srcOf(t,0); au.play().catch(()=>{});
+  if(MS&&MS.setPositionState) try{MS.setPositionState()}catch(e){}
   $("nt").textContent=t.no+"  "+t.title; $("na").textContent=t.artist; $("pcv").src=t.cv; $("pcv").hidden=false; setMeta(t);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("on",+r.dataset.i===i));
   const on=document.querySelector(".row.on"); if(on) on.scrollIntoView({block:"nearest"});
@@ -268,7 +281,6 @@ au.ontimeupdate=()=>{
   if(drag) return;
   paint(au.duration?au.currentTime/au.duration*100:0);
   setTm(fmt(au.currentTime)+" / "+fmt(au.duration));
-  if(MS&&au.duration) try{MS.setPositionState({duration:au.duration,position:au.currentTime,playbackRate:au.playbackRate})}catch(e){}
 };
 function frac(e){const r=$("seek").querySelector(".trk").getBoundingClientRect();return Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))}
 function follow(e){ // 指の位置に即追従(表示は即時、音は離したときに反映)
@@ -279,7 +291,9 @@ sk.onpointerdown=e=>{drag=true;sk.classList.add("drag");sk.setPointerCapture(e.p
 sk.onpointermove=e=>{if(drag)follow(e)};
 const end=e=>{if(!drag)return;const f=follow(e);drag=false;sk.classList.remove("drag");if(au.duration)au.currentTime=f*au.duration};
 sk.onpointerup=end;
-sk.onpointercancel=()=>{drag=false;sk.classList.remove("drag")};
+const cancel=()=>{drag=false;sk.classList.remove("drag");ontimeupdateSafe()};
+function ontimeupdateSafe(){au.ontimeupdate()}
+sk.onpointercancel=cancel; sk.onlostpointercapture=()=>{if(drag)cancel()};
 sk.onkeydown=e=>{ if(e.key==="ArrowRight")au.currentTime+=5; if(e.key==="ArrowLeft")au.currentTime-=5 };
 document.addEventListener("keydown",e=>{ if(e.key==="/"&&e.target===document.body){e.preventDefault();$("q").focus()} if(e.code==="Space"&&e.target===document.body){e.preventDefault();$("play").click()} });
 render();
